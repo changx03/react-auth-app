@@ -1,15 +1,16 @@
-import Button from '@material-ui/core/Button'
 import Paper from '@material-ui/core/Paper'
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import { observer } from 'mobx-react'
 import React from 'react'
+import Button from '@material-ui/core/Button'
+import { withStyles, WithStyles, Theme, createStyles } from '@material-ui/core/styles'
 import LoginStore from './LoginStore'
+import { observable } from 'mobx';
 import { Link } from 'react-router-dom'
 import FacebookButton from './FacebookButton';
 
 @observer
-class Login extends React.Component<WithStyles<typeof styles>, {}> {
+class Signup extends React.Component<WithStyles<typeof styles>, {}> {
   store = LoginStore.instance
 
   private _onChange = (fieldName: string) => event => {
@@ -19,17 +20,53 @@ class Login extends React.Component<WithStyles<typeof styles>, {}> {
   private _onBtnClick = () => {}
 
   render() {
-    const { email, password } = this.store
+    const { email, password, firstname, lastname, username } = this.store
     const { classes } = this.props
     const { root, textField, formPaper, title, subTitle } = classes
 
     return (
       <div className={root}>
         <Paper className={formPaper} elevation={1}>
-          <FacebookButton onClick={() => {}} text="Connect with Facebook" />
+          <FacebookButton onClick={() => {}} text="Sign up with Facebook" />
           <form autoComplete="off">
-            <h3 className={title}>Login</h3>
-            <h4 className={subTitle}>Continue to Tendolo</h4>
+            <h3 className={title}>Sign up</h3>
+            <h4 className={subTitle}>Let's get started and create your account</h4>
+            <TextField
+              id="filled-firstname"
+              label="First name"
+              value={firstname}
+              onChange={this._onChange('firstname')}
+              className={textField}
+              type="text"
+              name="firstname"
+              autoComplete="true"
+              margin="normal"
+              fullWidth
+            />
+            <TextField
+              id="filled-lastname"
+              label="Last name"
+              value={lastname}
+              onChange={this._onChange('lastname')}
+              className={textField}
+              type="text"
+              name="lastname"
+              autoComplete="true"
+              margin="normal"
+              fullWidth
+            />
+            <TextField
+              id="filled-username"
+              label="Username"
+              value={username}
+              onChange={this._onChange('username')}
+              className={textField}
+              type="text"
+              name="username"
+              autoComplete="true"
+              margin="normal"
+              fullWidth
+            />
             <TextField
               id="filled-email-input"
               label="Email"
@@ -39,7 +76,7 @@ class Login extends React.Component<WithStyles<typeof styles>, {}> {
               className={textField}
               type="email"
               name="email"
-              autoComplete="email"
+              autoComplete="true"
               margin="normal"
               fullWidth
             />
@@ -56,11 +93,13 @@ class Login extends React.Component<WithStyles<typeof styles>, {}> {
               fullWidth
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row' }}>
-              <Link to="/signup" style={{ textDecoration: 'none' }}>
-                <Button color="primary">Sign up</Button>
+              <Link to="/login" style={{ textDecoration: 'none' }}>
+              <Button color="primary">
+                Go to login page
+              </Button>
               </Link>
-              <Button variant="contained" color="primary">
-                Login
+              <Button variant="contained" color="primary" onClick={this._onBtnClick}>
+                Sign up
               </Button>
             </div>
           </form>
@@ -96,4 +135,4 @@ const styles = (theme: Theme) =>
     a: {}
   })
 
-export default withStyles(styles)(Login)
+export default withStyles(styles)(Signup)

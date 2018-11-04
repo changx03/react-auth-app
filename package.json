@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest --watchAll --watch",
     "watch": "webpack --config ./config/webpack.config.dev --progress",
-    "build": "webpack --config ./config/webpack.config.prod --progress"
+    "build": "webpack --config ./config/webpack.config.prod --progress",
+    "serve": "node server"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +22,7 @@
     "promise": "^8.0.2",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
+    "react-router-dom": "^4.3.1",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
@@ -32,6 +34,7 @@
     "@types/jest": "^23.3.8",
     "@types/react": "^16.4.18",
     "@types/react-dom": "^16.0.9",
+    "@types/react-router-dom": "^4.3.1",
     "@types/react-test-renderer": "^16.0.3",
     "autoprefixer": "^9.3.1",
     "babel-jest": "^23.6.0",
