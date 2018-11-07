@@ -8,15 +8,15 @@ const salt = bcrypt.genSaltSync(saltRounds)
 const passwordHash = bcrypt.hashSync(password, salt)
 const user = {
   userid: 1,
-  email: 'slimloook@gmail.com',
-  firstname: 'Luke',
-  lastname: 'Chang',
+  email: 'test@example.com',
+  firstname: 'Test',
+  lastname: 'User',
   passwordHash,
-  username: 'luke'
+  username: 'test'
 }
 
-function findUser(username, callback) {
-  if (username === user.username) {
+function findUser(email, callback) {
+  if (email === user.email) {
     return callback(null, user)
   } else {
     return callback(null)

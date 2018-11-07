@@ -6,7 +6,8 @@ import { observer } from 'mobx-react'
 import React from 'react'
 import LoginStore from './LoginStore'
 import { Link } from 'react-router-dom'
-import FacebookButton from './FacebookButton';
+import FacebookButton from './FacebookButton'
+import http from './http'
 
 @observer
 class Login extends React.Component<WithStyles<typeof styles>, {}> {
@@ -16,7 +17,9 @@ class Login extends React.Component<WithStyles<typeof styles>, {}> {
     this.store.setValue(fieldName, event.target.value)
   }
 
-  private _onBtnClick = () => {}
+  private _onBtnClick = () => {
+    http('user/login', 'POST', { email: this.store.email, password: this.store.password })
+  }
 
   render() {
     const { email, password } = this.store
@@ -27,7 +30,7 @@ class Login extends React.Component<WithStyles<typeof styles>, {}> {
       <div className={root}>
         <Paper className={formPaper} elevation={1}>
           <FacebookButton onClick={() => {}} text="Connect with Facebook" />
-          <form autoComplete="off">
+          <form>
             <h3 className={title}>Login</h3>
             <h4 className={subTitle}>Continue to Tendolo</h4>
             <TextField
@@ -59,7 +62,7 @@ class Login extends React.Component<WithStyles<typeof styles>, {}> {
               <Link to="/signup" style={{ textDecoration: 'none' }}>
                 <Button color="primary">Sign up</Button>
               </Link>
-              <Button variant="contained" color="primary">
+              <Button variant="contained" color="primary" onClick={this._onBtnClick}>
                 Login
               </Button>
             </div>

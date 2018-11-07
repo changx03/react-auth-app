@@ -13,7 +13,7 @@ const morgan = require('morgan')
 const flash = require('connect-flash')
 const userRouter = require('./routers/user')
 const bcrypt = require('bcrypt')
-const { user, findUser } = require('./db')
+const { findUser } = require('./db')
 
 const pgPool = new Pool()
 
@@ -42,16 +42,20 @@ app.use(
     secret: process.env.COOKIE_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 86400 /* 1 day */ }
+    cookie: { maxAge: 86400e3 /* in ms 24 * 60 * 60 * 1000 = 1 day */ }
   })
 )
 
 // passport strategy
+// if use email for login, we have to map email with username field manually
 passport.use(
-  new LocalStrategy(function(username, password, done) {
-    console.log(`username: ${username} password: ${password}`)
+  new LocalStrategy({
+    usernameField: 'email'
+  },
+    function(email, password, done) {
+    console.log(`username: ${email} password: ${password}`)
 
-    findUser(username, (err, user) => {
+    findUser(email, (err, user) => {
       if (err) {
         return done(err)
       }
@@ -60,7 +64,13 @@ passport.use(
       }
       
       // compare hashed password
-      bcrypt
+      bcrypt.compare(password, user.passwordHash, (err, isEqual) => {
+        console.log(`Is it equal? ${isEqual}`)
+
+        if (err) { return done(err) }
+        if (!isEqual) { return done(null, false) }
+        return done(null, user)
+      })
     })
   })
 )
@@ -73,11 +83,11 @@ passport.use(
 // serializing, and querying the user record by ID from the database when
 // deserializing.
 passport.serializeUser(function(user, cb) {
-  cb(null, user.username)
+  cb(null, user.email)
 })
 
-passport.deserializeUser(function(username, cb) {
-  findUser(username, cb)
+passport.deserializeUser(function(email, cb) {
+  findUser(email, cb)
 })
 
 app.use(passport.initialize())
@@ -88,6 +98,12 @@ app.use(express.static(path.join(__dirname, 'dist')))
 
 // routes
 app.get('/', function(_req, res, _next) {
+  res.sendFile(path.join(__dirname, 'dist/app.html'))
+})
+app.get('/login', function(_req, res, _next) {
+  res.sendFile(path.join(__dirname, 'dist/app.html'))
+})
+app.get('/signup', function(_req, res, _next) {
   res.sendFile(path.join(__dirname, 'dist/app.html'))
 })
 app.use('/user', userRouter)

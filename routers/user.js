@@ -5,7 +5,9 @@ const router = express.Router()
 
 router.post('/signup', (req, res, next) => {
   const { email, firstname, lastname, password, username } = req.body
-  console.log(`email: ${email}, firstname: ${firstname}, surname: ${lastname}, username: ${username}, password: ${password}`)
+  console.log(
+    `email: ${email}, firstname: ${firstname}, surname: ${lastname}, username: ${username}, password: ${password}`
+  )
 
   res.setHeader('Content-Type', 'application/json')
   res.status(200).json({
@@ -14,10 +16,13 @@ router.post('/signup', (req, res, next) => {
   })
 })
 
-router.post('/login', passport.authenticate('local', {
-  failureFlash: true,
-  successFlash: 'login successful'
-}
-))
+router.post(
+  '/login',
+  passport.authenticate('local', {
+    failureFlash: true,
+    failureRedirect: '/login',
+    successRedirect: '/'
+  })
+)
 
 module.exports = router
