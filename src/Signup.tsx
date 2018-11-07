@@ -5,9 +5,10 @@ import React from 'react'
 import Button from '@material-ui/core/Button'
 import { withStyles, WithStyles, Theme, createStyles } from '@material-ui/core/styles'
 import LoginStore from './LoginStore'
-import { observable } from 'mobx';
+import { observable, toJS } from 'mobx';
 import { Link } from 'react-router-dom'
 import FacebookButton from './FacebookButton';
+import http from './http';
 
 @observer
 class Signup extends React.Component<WithStyles<typeof styles>, {}> {
@@ -17,7 +18,9 @@ class Signup extends React.Component<WithStyles<typeof styles>, {}> {
     this.store.setValue(fieldName, event.target.value)
   }
 
-  private _onBtnClick = () => {}
+  private _onSubmit = () => {
+    http('/user/signup', 'POST', toJS(this.store));
+  }
 
   render() {
     const { email, password, firstname, lastname, username } = this.store
@@ -28,7 +31,7 @@ class Signup extends React.Component<WithStyles<typeof styles>, {}> {
       <div className={root}>
         <Paper className={formPaper} elevation={1}>
           <FacebookButton onClick={() => {}} text="Sign up with Facebook" />
-          <form autoComplete="off">
+          <form onSubmit={this._onSubmit}>
             <h3 className={title}>Sign up</h3>
             <h4 className={subTitle}>Let's get started and create your account</h4>
             <TextField
@@ -98,7 +101,7 @@ class Signup extends React.Component<WithStyles<typeof styles>, {}> {
                 Go to login page
               </Button>
               </Link>
-              <Button variant="contained" color="primary" onClick={this._onBtnClick}>
+              <Button variant="contained" color="primary" onClick={this._onSubmit}>
                 Sign up
               </Button>
             </div>
