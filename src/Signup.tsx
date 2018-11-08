@@ -31,7 +31,7 @@ class Signup extends React.Component<WithStyles<typeof styles>, {}> {
       <div className={root}>
         <Paper className={formPaper} elevation={1}>
           <FacebookButton onClick={() => {}} text="Sign up with Facebook" />
-          <form onSubmit={this._onSubmit}>
+          <form onSubmit={this._onSubmit} autoComplete="false">
             <h3 className={title}>Sign up</h3>
             <h4 className={subTitle}>Let's get started and create your account</h4>
             <TextField

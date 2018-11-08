@@ -9,8 +9,8 @@ const LocalStrategy = require('passport-local').Strategy
 const morgan = require('morgan')
 const flash = require('connect-flash')
 const userRouter = require('./routers/user')
-const bcrypt = require('bcrypt')
-const { findUser, findUserByID, pgPool } = require('./db')
+const account = require('./account')
+const pgPool = require('./pgPool')
 
 // load env file
 dotenv.config()
@@ -39,32 +39,7 @@ app.use(
 
 // passport strategy
 // if use email for login, we have to map email with username field manually
-passport.use(
-  new LocalStrategy(
-    {
-      usernameField: 'email'
-    },
-    function(email, password, done) {
-      console.log(`username: ${email} password: ${password}`)
-
-      findUser(email, (err, user) => {
-        if (err) return done(err)
-        if (!user) return done(null, false)
-
-        // compare hashed password
-        bcrypt.compare(password, user.passwordhash, (err, isEqual) => {
-          if (err) {
-            return done(err)
-          }
-          if (!isEqual) {
-            return done(null, false)
-          }
-          return done(null, user)
-        })
-      })
-    }
-  )
-)
+passport.use(new LocalStrategy({ usernameField: 'email' }, account.authenticate))
 
 // Configure Passport authenticated session persistence.
 //
@@ -73,32 +48,22 @@ passport.use(
 // typical implementation of this is as simple as supplying the user ID when
 // serializing, and querying the user record by ID from the database when
 // deserializing.
-passport.serializeUser(function(user, done) {
-  console.log('serializeUser', user)
-  done(null, user.userid)
-})
-
-passport.deserializeUser(function(userid, done) {
-  findUserByID(userid, done)
-})
+passport.serializeUser(account.serializeUser)
+passport.deserializeUser(account.deserializeUser)
 
 app.use(passport.initialize())
 app.use(passport.session())
 
 // set static public path
-app.use(express.static(path.join(__dirname, 'dist')))
+app.use(express.static(path.join(__dirname, '../dist')))
 
 // routes
-// if anything not start with /api redirect to root
-app.get('/secure', function (req, res, next) {
-  res.redirect(`/?username=${req.user.username}`)
-})
-app.get(/^(?!\/api)/, function(req, res, _next) {
-  res.sendFile(path.join(__dirname, 'dist/app.html'))
-})
 app.use('/api', userRouter)
+app.get('*', function(req, res, _next) {
+  res.sendFile(path.join(__dirname, '../dist/app.html'))
+})
 
-const port = process.env.PORT || 8081
+const port = process.env.PORT || 8080
 app.listen(port, function() {
   console.log('listening to http://localhost:' + port)
 })
