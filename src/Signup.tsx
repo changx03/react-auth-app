@@ -19,7 +19,7 @@ class Signup extends React.Component<WithStyles<typeof styles>, {}> {
   }
 
   private _onSubmit = () => {
-    http('/user/signup', 'POST', toJS(this.store));
+    http('api/user/signup', 'POST', toJS(this.store));
   }
 
   render() {

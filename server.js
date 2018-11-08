@@ -92,16 +92,10 @@ app.use(passport.session())
 app.use(express.static(path.join(__dirname, 'dist')))
 
 // routes
-app.get('/', function(_req, res, _next) {
+app.get(/^(?!\/api)/, function(_req, res, _next) {
   res.sendFile(path.join(__dirname, 'dist/app.html'))
 })
-app.get('/login', function(_req, res, _next) {
-  res.sendFile(path.join(__dirname, 'dist/app.html'))
-})
-app.get('/signup', function(_req, res, _next) {
-  res.sendFile(path.join(__dirname, 'dist/app.html'))
-})
-app.use('/user', userRouter)
+app.use('/api', userRouter)
 
 const port = process.env.PORT || 8081
 app.listen(port, function() {

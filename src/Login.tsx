@@ -18,7 +18,7 @@ class Login extends React.Component<WithStyles<typeof styles>, {}> {
   }
 
   private _onBtnClick = () => {
-    http('user/login', 'POST', { email: this.store.email, password: this.store.password })
+    http('api/user/login', 'POST', { email: this.store.email, password: this.store.password })
   }
 
   render() {
