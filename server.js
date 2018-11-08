@@ -4,7 +4,6 @@ dotenv.config()
 const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser')
-const { Pool, Client } = require('pg')
 const session = require('express-session')
 const pgSession = require('connect-pg-simple')(session)
 const passport = require('passport')
@@ -13,9 +12,7 @@ const morgan = require('morgan')
 const flash = require('connect-flash')
 const userRouter = require('./routers/user')
 const bcrypt = require('bcrypt')
-const { findUser } = require('./db')
-
-const pgPool = new Pool()
+const { findUser, pgPool } = require('./db')
 
 // create role appserver login password 'chickendinner';
 // see https://node-postgres.com/features/connecting to create a .env file
@@ -64,9 +61,7 @@ passport.use(
       }
       
       // compare hashed password
-      bcrypt.compare(password, user.passwordHash, (err, isEqual) => {
-        console.log(`Is it equal? ${isEqual}`)
-
+      bcrypt.compare(password, user.passwordhash, (err, isEqual) => {
         if (err) { return done(err) }
         if (!isEqual) { return done(null, false) }
         return done(null, user)
@@ -82,12 +77,12 @@ passport.use(
 // typical implementation of this is as simple as supplying the user ID when
 // serializing, and querying the user record by ID from the database when
 // deserializing.
-passport.serializeUser(function(user, cb) {
-  cb(null, user.email)
+passport.serializeUser(function(user, done) {
+  done(null, user.email)
 })
 
-passport.deserializeUser(function(email, cb) {
-  findUser(email, cb)
+passport.deserializeUser(function(email, done) {
+  findUser(email, done)
 })
 
 app.use(passport.initialize())
