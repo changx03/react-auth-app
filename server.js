@@ -90,7 +90,10 @@ app.use(express.static(path.join(__dirname, 'dist')))
 
 // routes
 // if anything not start with /api redirect to root
-app.get(/^(?!\/api)/, function(_req, res, _next) {
+app.get('/secure', function (req, res, next) {
+  res.redirect(`/?username=${req.user.username}`)
+})
+app.get(/^(?!\/api)/, function(req, res, _next) {
   res.sendFile(path.join(__dirname, 'dist/app.html'))
 })
 app.use('/api', userRouter)
