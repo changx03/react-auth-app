@@ -1,6 +1,4 @@
 const dotenv = require('dotenv')
-dotenv.config()
-
 const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser')
@@ -14,12 +12,8 @@ const userRouter = require('./routers/user')
 const bcrypt = require('bcrypt')
 const { findUser, pgPool } = require('./db')
 
-// create role appserver login password 'chickendinner';
-// see https://node-postgres.com/features/connecting to create a .env file
-// pgPool.query('select * from session', (err, res) => {
-//   console.log(err,res)
-//   pgPool.end()
-// })
+// load env file
+dotenv.config()
 
 const app = express()
 
@@ -46,28 +40,30 @@ app.use(
 // passport strategy
 // if use email for login, we have to map email with username field manually
 passport.use(
-  new LocalStrategy({
-    usernameField: 'email'
-  },
+  new LocalStrategy(
+    {
+      usernameField: 'email'
+    },
     function(email, password, done) {
-    console.log(`username: ${email} password: ${password}`)
+      console.log(`username: ${email} password: ${password}`)
 
-    findUser(email, (err, user) => {
-      if (err) {
-        return done(err)
-      }
-      if (!user) {
-        return done(null, false)
-      }
-      
-      // compare hashed password
-      bcrypt.compare(password, user.passwordhash, (err, isEqual) => {
-        if (err) { return done(err) }
-        if (!isEqual) { return done(null, false) }
-        return done(null, user)
+      findUser(email, (err, user) => {
+        if (err) return done(err)
+        if (!user) return done(null, false)
+
+        // compare hashed password
+        bcrypt.compare(password, user.passwordhash, (err, isEqual) => {
+          if (err) {
+            return done(err)
+          }
+          if (!isEqual) {
+            return done(null, false)
+          }
+          return done(null, user)
+        })
       })
-    })
-  })
+    }
+  )
 )
 
 // Configure Passport authenticated session persistence.
@@ -92,6 +88,7 @@ app.use(passport.session())
 app.use(express.static(path.join(__dirname, 'dist')))
 
 // routes
+// if anything not start with /api redirect to root
 app.get(/^(?!\/api)/, function(_req, res, _next) {
   res.sendFile(path.join(__dirname, 'dist/app.html'))
 })

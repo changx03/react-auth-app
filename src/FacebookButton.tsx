@@ -1,7 +1,7 @@
+import Button from '@material-ui/core/Button'
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles'
 import React from 'react'
 import FacebookIcon from './FacebookIcon.svg'
-import Button from '@material-ui/core/Button'
-import { withStyles, Theme, createStyles, WithStyles } from '@material-ui/core/styles'
 
 interface FacebookButtonProps extends WithStyles<typeof styles> {
   text: string
@@ -21,7 +21,8 @@ const FacebookButton = (props: FacebookButtonProps) => {
         style={{ textTransform: 'none' }}
       >
         <div>
-          <FacebookIcon style={{ height: 14 }} />{text}
+          <FacebookIcon style={{ height: 14 }} />
+          {text}
         </div>
       </Button>
       <div className={emailContainer}>

@@ -25,11 +25,11 @@ const salt = bcrypt.genSaltSync(saltRounds)
 
 function findUser(email, callback) {
   if (!email) return callback(null)
-
   ;(async () => {
     const client = await pgPool.connect()
     try {
-      const queryText = 'select userid, email, username, firstname, surname, passwordhash from appuser where email = $1'
+      const queryText =
+        'select userid, email, username, firstname, surname, passwordhash from appuser where email = $1'
       const values = [email]
       const data = await client.query(queryText, values)
       // not found

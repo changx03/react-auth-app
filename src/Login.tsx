@@ -4,10 +4,10 @@ import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/s
 import TextField from '@material-ui/core/TextField'
 import { observer } from 'mobx-react'
 import React from 'react'
-import LoginStore from './LoginStore'
 import { Link } from 'react-router-dom'
 import FacebookButton from './FacebookButton'
 import http from './http'
+import LoginStore from './LoginStore'
 
 @observer
 class Login extends React.Component<WithStyles<typeof styles>, {}> {

@@ -1,14 +1,14 @@
+import Button from '@material-ui/core/Button'
 import Paper from '@material-ui/core/Paper'
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
+import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import React from 'react'
-import Button from '@material-ui/core/Button'
-import { withStyles, WithStyles, Theme, createStyles } from '@material-ui/core/styles'
-import LoginStore from './LoginStore'
-import { observable, toJS } from 'mobx';
 import { Link } from 'react-router-dom'
-import FacebookButton from './FacebookButton';
-import http from './http';
+import FacebookButton from './FacebookButton'
+import http from './http'
+import LoginStore from './LoginStore'
 
 @observer
 class Signup extends React.Component<WithStyles<typeof styles>, {}> {
@@ -19,7 +19,7 @@ class Signup extends React.Component<WithStyles<typeof styles>, {}> {
   }
 
   private _onSubmit = () => {
-    http('api/user/signup', 'POST', toJS(this.store));
+    http('api/user/signup', 'POST', toJS(this.store))
   }
 
   render() {
@@ -97,9 +97,7 @@ class Signup extends React.Component<WithStyles<typeof styles>, {}> {
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row' }}>
               <Link to="/login" style={{ textDecoration: 'none' }}>
-              <Button color="primary">
-                Go to login page
-              </Button>
+                <Button color="primary">Go to login page</Button>
               </Link>
               <Button variant="contained" color="primary" onClick={this._onSubmit}>
                 Sign up

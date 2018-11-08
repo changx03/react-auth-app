@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import NotFoundPage from './404'
+import Content from './Content'
 import Login from './Login'
 import Signup from './Signup'
-import Content from './Content'
-import NotFoundPage from './404'
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
 const App = () => (
   <div className="app-root">
