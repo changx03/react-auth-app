@@ -47,9 +47,36 @@ function findUser(email, callback) {
   })
 }
 
+function findUserByID (userid, callback) {
+  console.log('findUserByID', userid)
+
+  ;(async () => {
+    const client = await pgPool.connect()
+    try {
+      const queryText =
+        'select userid, email, username, firstname, surname, passwordhash from appuser where userid = $1'
+      const values = [userid]
+      const data = await client.query(queryText, values)
+      console.log('findUserByID', data)
+      // not found
+      if (data.rowCount === 0) {
+        return callback(null)
+      }
+      const user = data.rows[0]
+      return callback(null, user)
+    } finally {
+      client.release()
+    }
+  })().catch(err => {
+    console.error(err)
+    return callback(err)
+  })
+}
+
 module.exports = {
   // user,
   findUser,
+  findUserByID,
   pgPool,
   salt
 }

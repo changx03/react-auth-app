@@ -10,7 +10,7 @@ const morgan = require('morgan')
 const flash = require('connect-flash')
 const userRouter = require('./routers/user')
 const bcrypt = require('bcrypt')
-const { findUser, pgPool } = require('./db')
+const { findUser, findUserByID, pgPool } = require('./db')
 
 // load env file
 dotenv.config()
@@ -74,11 +74,12 @@ passport.use(
 // serializing, and querying the user record by ID from the database when
 // deserializing.
 passport.serializeUser(function(user, done) {
-  done(null, user.email)
+  console.log('serializeUser', user)
+  done(null, user.userid)
 })
 
-passport.deserializeUser(function(email, done) {
-  findUser(email, done)
+passport.deserializeUser(function(userid, done) {
+  findUserByID(userid, done)
 })
 
 app.use(passport.initialize())
