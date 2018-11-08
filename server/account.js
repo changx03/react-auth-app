@@ -30,7 +30,6 @@ function deserializeUser(userid, done) {
 }
 
 function registerUser(user, done) {
-  // TODO: can't find user
   ;(async () => {
     const client = await pgPool.connect()
     try {
@@ -39,9 +38,7 @@ function registerUser(user, done) {
         'insert into appuser(username, firstname, surname, email, passwordhash) values($1, $2, $3, $4, $5) returning userid, email, username, firstname, surname'
       const values = [username, firstname, lastname, email, bcrypt.hashSync(password, salt)]
       const data = await client.query(queryTxt, values)
-      const user = data.rows[0]
-      console.log('new user:', user)
-      done(null, user)
+      done(null, data.rows[0])
     } finally {
       client.release()
     }
@@ -49,7 +46,6 @@ function registerUser(user, done) {
 }
 
 function findUser(email, callback) {
-  // TODO: can't find email
   ;(async () => {
     const client = await pgPool.connect()
     try {
